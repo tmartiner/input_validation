@@ -1,43 +1,58 @@
 import 'package:flutter/material.dart';
 
-class FormScreen extends StatelessWidget {
-  // Attribute
-  // (keine)
-
-  // Konstruktor
+class FormScreen extends StatefulWidget {
   const FormScreen({super.key});
 
-  // Methoden
+  @override
+  _FormScreenState createState() => _FormScreenState();
+}
+
+class _FormScreenState extends State<FormScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Form(
-          child: Column(children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text("Email"),
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text("Email"),
+                ),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateEmail,
               ),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateEmail,
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text("Passwort"),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  label: Text("Passwort"),
+                ),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validatePw,
               ),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validatePw,
-            ),
-            const SizedBox(height: 32),
-            FilledButton(
-              onPressed: () {},
-              child: const Text("Login"),
-            ),
-          ]),
+              const SizedBox(height: 32),
+              FilledButton(
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Formular ist gültig!')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Formular ist ungültig!')),
+                    );
+                  }
+                },
+                child: const Text("Login"),
+              ),
+            ],
+          ),
         ),
       ),
     );
